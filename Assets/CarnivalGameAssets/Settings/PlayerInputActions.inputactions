@@ -68,6 +68,44 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "FirstPersonCamera",
+            "id": "91717f4e-9c1f-4773-b4f0-57ed751b679e",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "12e6c208-71f2-48ab-9884-117a51a1c950",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "067295a9-c682-4e7d-af34-34313ca0bc50",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "749d52df-d6d1-4fff-b8d9-f9d8dfea8bfb",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

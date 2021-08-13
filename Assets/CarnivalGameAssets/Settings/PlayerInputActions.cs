@@ -81,6 +81,44 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""FirstPersonCamera"",
+            ""id"": ""91717f4e-9c1f-4773-b4f0-57ed751b679e"",
+            ""actions"": [
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""12e6c208-71f2-48ab-9884-117a51a1c950"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""067295a9-c682-4e7d-af34-34313ca0bc50"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""749d52df-d6d1-4fff-b8d9-f9d8dfea8bfb"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -112,6 +150,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_FireHold = m_Player.FindAction("FireHold", throwIfNotFound: true);
+        // FirstPersonCamera
+        m_FirstPersonCamera = asset.FindActionMap("FirstPersonCamera", throwIfNotFound: true);
+        m_FirstPersonCamera_Fire = m_FirstPersonCamera.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -198,6 +239,39 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // FirstPersonCamera
+    private readonly InputActionMap m_FirstPersonCamera;
+    private IFirstPersonCameraActions m_FirstPersonCameraActionsCallbackInterface;
+    private readonly InputAction m_FirstPersonCamera_Fire;
+    public struct FirstPersonCameraActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public FirstPersonCameraActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Fire => m_Wrapper.m_FirstPersonCamera_Fire;
+        public InputActionMap Get() { return m_Wrapper.m_FirstPersonCamera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(FirstPersonCameraActions set) { return set.Get(); }
+        public void SetCallbacks(IFirstPersonCameraActions instance)
+        {
+            if (m_Wrapper.m_FirstPersonCameraActionsCallbackInterface != null)
+            {
+                @Fire.started -= m_Wrapper.m_FirstPersonCameraActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_FirstPersonCameraActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_FirstPersonCameraActionsCallbackInterface.OnFire;
+            }
+            m_Wrapper.m_FirstPersonCameraActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+            }
+        }
+    }
+    public FirstPersonCameraActions @FirstPersonCamera => new FirstPersonCameraActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -220,5 +294,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     {
         void OnFire(InputAction.CallbackContext context);
         void OnFireHold(InputAction.CallbackContext context);
+    }
+    public interface IFirstPersonCameraActions
+    {
+        void OnFire(InputAction.CallbackContext context);
     }
 }
